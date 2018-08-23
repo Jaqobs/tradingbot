@@ -1,0 +1,3 @@
+[login]
+APIKEY: <your key>
+SECRET: <your secret>
