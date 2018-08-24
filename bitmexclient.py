@@ -1,6 +1,7 @@
 import configparser
 import bitmex
 import datetime
+import time
 from dateutil import tz
 
 
@@ -32,26 +33,31 @@ def time_conversion(args):
 	
 	return time
 
-def get_funding(client, request=None):
-	if request == None:
-		request = 'fundingRate'
-
+def request_funding(client):
 	result = client.Funding.Funding_get(symbol='XBTUSD', reverse=True, count=1).result()
 	
-	if (request is 'fundingRate') or (request is 'fundingRateDaily'):
-		x = str('{0:.4f}%'.format(result[0][0][request] * 100))
-	else:
-		x = result[0][0][request]
+	print('Funding is: {0:.4f}%. Funding in __ hours'.format(result[0][0]['fundingRate'] * 100))
 	
-	return x
 
+def request_instrument(client, symbol=None, li=None):
+	if symbol == None:
+		symbol = 'XBTUSD'
+
+	result = client.Instrument.Instrument_get(symbol=symbol, reverse=True).result()
+	if li is not None:
+		for word in li:
+			try:
+				print('{}: {}'.format(word, result[0][0][word]))
+			except:
+				print('Does not exist')
+				continue
+			
 
 def main():
 	client = bitmex.bitmex(test=False, api_key=get_auth('APIKEY'), api_secret=get_auth('SECRET'))
-
-	print('The funding rate is: {}.'.format(get_funding(client)))
-	print('The predicted funding rate is: {}.'.format(get_funding(client, request='fundingRateDaily')))
-	print('----------\n')
 	
+	request_instrument(client, li=('highPrice', 'lowPrice', 'lastPrice'))
+	request_funding(client)
+
 if __name__ == "__main__":
 	main()
