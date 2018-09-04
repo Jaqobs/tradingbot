@@ -1,9 +1,10 @@
 #indicators by Jaqobs
 import math
 
+#Arnaud Legoux Moving Average
 def alma(data, length, offset=None, sigma=None):	#buggy
 	series = data[0:length]
-	print(series)
+
 	if offset == None:
 		offset = 0.85
 
@@ -19,10 +20,11 @@ def alma(data, length, offset=None, sigma=None):	#buggy
 		weight = math.exp(-1 * math.pow(i - m, 2) / 2 * math.pow(s, 2))
 		norm += norm + weight
 		sums += sums + series[length - i - 1] * weight
+		print('Result: ' + str(sums/norm))		#debugging
 
 	return sums / norm
 
-
+#Moving Average
 def sma(data, length):
 	series = data[0:length]
 	x = 0.0		#sum of price
@@ -31,7 +33,7 @@ def sma(data, length):
 
 	return x / length
 
-
+#Exponential Moving Average
 def ema(data, length):
 	series = data
 	m = 2.0 / (length + 1)		#weighted multiplier
@@ -43,7 +45,7 @@ def ema(data, length):
 		
 	return x
 
-
+#Volume Weighted Moving Average
 def vwma(data, volume, length):
 	price_series = data[0:length]
 	vol_series = volume[0:length]
@@ -59,9 +61,9 @@ def vwma(data, volume, length):
 	return x / y
 
 
-
+#testing
 test = [
-		1.16163, 1.16006, 1.16709, 1.17068, 1.16940, 
+		1.16174, 1.16006, 1.16709, 1.17068, 1.16940, 
 		1.16774, 1.16194, 1.15378, 1.15969, 1.15705, 
 		1.14816, 1.14362, 1.13766, 1.13451, 1.13439, 
 		1.14097, 1.14111
