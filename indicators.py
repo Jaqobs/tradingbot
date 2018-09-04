@@ -2,7 +2,7 @@
 import math
 
 #Arnaud Legoux Moving Average
-def alma(data, length, offset=None, sigma=None):	#buggy
+def alma(data, length, offset=None, sigma=None):
 	series = data[0:length]
 
 	if offset == None:
@@ -17,12 +17,12 @@ def alma(data, length, offset=None, sigma=None):	#buggy
 	sums = 0.0
 
 	for i in range(length):
-		weight = math.exp(-1 * math.pow(i - m, 2) / 2 * math.pow(s, 2))
-		norm += norm + weight
-		sums += sums + series[length - i - 1] * weight
-		print('Result: ' + str(sums/norm))		#debugging
+		weight = math.exp(-1 * math.pow(i - m, 2) / (2 * math.pow(s, 2)))
+		norm += weight
+		sums += series[length - i - 1] * weight
 
 	return sums / norm
+
 
 #Moving Average
 def sma(data, length):

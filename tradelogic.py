@@ -1,4 +1,6 @@
 #tradelogic by Jaqobs
+#4h strategy
+
 import indicators
 
 def main():
