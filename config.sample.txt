@@ -1,3 +1,15 @@
-[login]
+[bitfinex]
+APIKEY: <your key>
+SECRET: <your secret>
+
+[kraken]
+APIKEY: <your key>
+SECRET: <your secret>
+
+[bitmex]
+APIKEY: <your key>
+SECRET: <your secret>
+
+[exchange]
 APIKEY: <your key>
 SECRET: <your secret>

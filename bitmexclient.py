@@ -11,7 +11,7 @@ def get_auth(arg):
 	configParser.read('config.txt')
 	
 	try:
-		x = configParser.get('login', arg)
+		x = configParser.get('bitmex', arg)
 	except:
 		print('invalid config file')
 
