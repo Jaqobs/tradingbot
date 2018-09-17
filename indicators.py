@@ -21,6 +21,7 @@ def alma(data, length, offset=None, sigma=None):
 		norm += weight
 		sums += series[length - i - 1] * weight
 
+	print('Alma {}: {}'.format(length, (sums / norm)))	#debugging
 	return sums / norm
 
 
@@ -31,6 +32,7 @@ def sma(data, length):
 	for i in series:
 		x += i
 
+	print('SMA {}: {}'.format(length, (x / length)))	#debugging
 	return x / length
 
 #Exponential Moving Average
@@ -43,6 +45,7 @@ def ema(data, length):
 		if i is not x:
 			x = i * m + x * (1.0 - m)
 		
+	print('EMA {}: {}'.format(length, x))	#debugging
 	return x
 
 #Volume Weighted Moving Average
@@ -58,24 +61,6 @@ def vwma(data, volume, length):
 	for vol in vol_series:
 		y += vol
 
+	print('VWMA {}: {}'.format(length, (x / y)))	#debugging
 	return x / y
-
-def main():
-	#testing
-	test = [
-			1.16174, 1.16006, 1.16709, 1.17068, 1.16940, 
-			1.16774, 1.16194, 1.15378, 1.15969, 1.15705, 
-			1.14816, 1.14362, 1.13766, 1.13451, 1.13439, 
-			1.14097, 1.14111
-			]
-	test_vol = [
-			145.485, 355.52, 320.145, 316.929, 
-			297.633, 239.747, 310.497, 300.849, 
-			307.281, 349.088
-			]
-
-	print('This is ALMA: ' + str(alma(test, 5)))
-
-if __name__ == '__main__':
-	main()
 	
