@@ -14,8 +14,6 @@ class ExchData():
 				'rateLimit': 10000,
 			'enableRateLimit': True
 		})
-		elif exchange == 'bitmex':
-			self.exchange = ccxt.bitmex()
 		else:
 			exchange == ccxt.bitfinex2()
 		print('Connection to {0} established...'.format(self.exchange.describe()['name']))
@@ -29,6 +27,10 @@ class ExchData():
 	def get_books(self, symbol, ):
 		book = self.exchange.fetch_order_book(self.symbol)
 
+
+	def clear_candles(self):
+		self.candles = []
+		print('Candles cleared...')
 			
 	def fetch_candles(self, timeframe=None, start=None, limit=None):
 		print('Attempting to fetch candles...')
@@ -85,24 +87,7 @@ class ExchData():
 			self.candles.insert(0, candle)
 
 		print('Fetching second part of candles...')
-		since = int(self.exchange.milliseconds()) - 86400000 * int(start // 3 * 2)
-		print('Start date: {}'.format(self.exchange.iso8601(since)))
-		results2 = results = self.exchange.fetch_ohlcv(self.symbol, timeframe=timeframe, since=since, limit=limit)
-
-		for element in results2:
-			candle = {
-				'timestamp':element[0],
-				'open':element[1],
-				'high':element[2],
-				'low':element[3],
-				'close':element[4],
-				'volume':element[5]
-				}
-
-			self.candles.insert(0, candle)
-
-		print('Fetching third part of candles...')
-		since = int(self.exchange.milliseconds()) - 86400000 * int(start // 3)
+		since = int(self.exchange.milliseconds()) - 86400000 * int(start // 2)
 		print('Start date: {}'.format(self.exchange.iso8601(since)))
 		results2 = results = self.exchange.fetch_ohlcv(self.symbol, timeframe=timeframe, since=since, limit=limit)
 
@@ -181,6 +166,3 @@ class ExchData():
 			new_candles.append(candle)
 
 		return new_candles
-
-
-		

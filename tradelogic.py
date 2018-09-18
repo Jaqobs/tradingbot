@@ -13,6 +13,7 @@ def long_open(data_open, data_close):
 	if (ema_close > alma_close) and (ema_open < alma_close):
 		boolean = True
 
+	print('Long open: {}'. format(boolean))
 	return boolean
 
 
@@ -26,12 +27,13 @@ def long_close(data_open, data_close):
 	if (ema_close < ema_thirty_close) and (ema_open > ema_thirty_close):
 		boolean = True
 
+	print('Long close: {}'. format(boolean))
 	return boolean
 
 
 def short_open(data_open, data_close):
 	current_price = 0.0
-	alma_close = ind.alma(data_close, 100)
+	alma_close = ind.alma(data_close, 300)
 	ema_close = ind.ema(data_close, 9)
 	ema_open = ind.ema(data_open, 9)
 	boolean = False
@@ -39,6 +41,7 @@ def short_open(data_open, data_close):
 	if (ema_close < alma_close) and (ema_open > alma_close):
 		boolean = True
 
+	print('Short open: {}'. format(boolean))
 	return boolean
 
 
@@ -52,4 +55,5 @@ def short_close(data_open, data_close):
 	if (ema_close > ema_thirty_close) and (ema_open < ema_thirty_close):
 		boolean = True
 
+	print('Short close: {}'. format(boolean))
 	return boolean
