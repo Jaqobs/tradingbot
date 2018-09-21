@@ -117,11 +117,11 @@ class ExchData():
 	def convert_candles(self, candle_data, timeframe):
 		new_candles = []
 		condition = True
-		
+		print('Converting candles to {}h candles...'.format(timeframe))
 		#remove open candles
 		print('Original length: {}'.format(len(candle_data)))		#debugging
 		while (condition): 		
-			if ( int(self.get_hour(candle_data[0]['timestamp'])) % 4 == 0 ):
+			if ( int(self.get_hour(candle_data[0]['timestamp'])) % 4 == 3 ):
 				condition = False
 			else:
 				del candle_data[0]
@@ -131,9 +131,9 @@ class ExchData():
 		i = 0
 		for i in range(i, len(candle_data) - len(candle_data)%timeframe, timeframe):
 			candle_timestamp = candle_data[i]['timestamp']
-			candle_open = candle_data[i]['open']
+			candle_open = candle_data[i+3]['open']
 
-			candle_high = min(
+			candle_high = max(
 							candle_data[i]['high'],
 							candle_data[i+1]['high'],
 							candle_data[i+2]['high'],
@@ -147,7 +147,7 @@ class ExchData():
 							candle_data[i+3]['low']
 							)
 
-			candle_close = candle_data[i+3]['close']
+			candle_close = candle_data[i]['close']
 
 			candle_volume = int(candle_data[i]['volume']) \
 							+ int(candle_data[i+1]['volume']) \

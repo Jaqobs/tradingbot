@@ -51,6 +51,14 @@ def get_open_positions():
 
 	return open_positions
 
+def has_position():
+	positions = get_open_positions()
+	if (positions):
+		print('Is currently in position.')
+		return True
+	else:
+		print('Is currently NOT in position...')
+		return False
 
 def get_open_orders():
 	orders = []

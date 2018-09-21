@@ -8,7 +8,7 @@ import mexorders as bitmex
 def main():
 
 	bfx = ExchData('bfx', 'BTC/USDT')
-	sleep_timer = 3600 #3600sec = 1h
+	sleep_timer = 60 #3600sec = 1h
 
 	while True:
 		bfx.clear_candles()
@@ -24,20 +24,20 @@ def main():
 			candle_close.append(candle['close'])
 			volume.append(candle['volume'])
 		
-		if (tradelogic.long_open(candle_open, candle_close)) and (bitmex.has_orders() == False):
-			bitmex.create_order('limit', 'buy', 1, 1000)
+		if (tradelogic.long_open(candle_open, candle_close)) and (bitmex.has_position() == False):
+			bitmex.create_order('BTC/USD', 'market', 'buy', 1)
 
 		if (tradelogic.long_close(candle_open, candle_close)) and (bitmex.has_orders() == True):
-			bitmex.create_order('limit', 'sell', 1, 1000)
+			bitmex.create_order('BTC/USD', 'limit', 'sell', 1)
 
-		if (tradelogic.short_open(candle_open, candle_close)) and (bitmex.has_orders() == False):
-			bitmex.create_order('limit', 'sell', 1, 10000)
+		if (tradelogic.short_open(candle_open, candle_close)) and (bitmex.has_position() == False):
+			bitmex.create_order('BTC/USD', 'limit', 'sell', 1)
 
 		if (tradelogic.short_close(candle_open, candle_close)) and (bitmex.has_orders() == True):
-			bitmex.create_order('limit', 'buy', 1, 1000)
+			bitmex.create_order('BTC/USD', 'limit', 'buy', 1)
 
-		print('Waiting for next cycle.')
-		time.sleep(sleep_timer * 2)	#4 hours
+		print('Waiting for next cycle...\n-------------\n')
+		time.sleep(sleep_timer * 5)
 	
 if __name__ == '__main__':
 	main()
