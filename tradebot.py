@@ -27,15 +27,16 @@ def main():
 		if (tradelogic.long_open(candle_open, candle_close)) and (bitmex.has_position() == False):
 			bitmex.create_order('BTC/USD', 'market', 'buy', 1)
 
-		if (tradelogic.long_close(candle_open, candle_close)) and (bitmex.has_orders() == True):
-			bitmex.create_order('BTC/USD', 'limit', 'sell', 1)
+		if (tradelogic.long_close(candle_open, candle_close)) and (bitmex.has_position() == True):
+			bitmex.create_order('BTC/USD', 'market', 'sell', 1)
 
 		if (tradelogic.short_open(candle_open, candle_close)) and (bitmex.has_position() == False):
-			bitmex.create_order('BTC/USD', 'limit', 'sell', 1)
+			bitmex.create_order('BTC/USD', 'market', 'sell', 1)
 
-		if (tradelogic.short_close(candle_open, candle_close)) and (bitmex.has_orders() == True):
-			bitmex.create_order('BTC/USD', 'limit', 'buy', 1)
+		if (tradelogic.short_close(candle_open, candle_close)) and (bitmex.has_position() == True):
+			bitmex.create_order('BTC/USD', 'market', 'buy', 1)
 
+		lastPrice = bitmex.get_last_price('BTC/USD')
 		print('Waiting for next cycle...\n-------------\n')
 		time.sleep(sleep_timer * 5)
 	

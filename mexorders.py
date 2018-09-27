@@ -91,6 +91,13 @@ def cancel_order(orderid):
 			time.sleep(apisleep)
 
 
+def get_last_price(symbol):
+	ticker = bitmex.fetch_ticker(symbol)
+	print('Last price: {}'.format(ticker['last']))
+
+	return ticker['last']
+
+
 def cancel_all_orders():
 	orders = get_open_orders()
 	if orders:

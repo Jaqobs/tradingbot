@@ -16,7 +16,7 @@ class ExchData():
 		})
 		else:
 			exchange == ccxt.bitfinex2()
-		print('Connection to {0} established...'.format(self.exchange.describe()['name']))
+		print('{0} instantialized...'.format(self.exchange.describe()['name']))
 
 		self.symbol = symbol
 		print('Symbol: {}'.format(self.symbol))

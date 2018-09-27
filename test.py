@@ -1,12 +1,20 @@
+import configparser
 import ccxt
-import datetime
+import time
 
-lista = ['eins', 'zwei']
-print(lista)
-s = 'drei'
+cp = configparser.RawConfigParser()  
+cp.read('config.txt')
+apilimit = 5
+apisleep = 5
+bitmex = ccxt.bitmex({
+					'apiKey': cp.get('bitmex', 'APIKEY'),
+					'secret': cp.get('bitmex', 'SECRET'),
+					})
+			
+def last_price(symbol):
+	ticker = bitmex.fetch_ticker(symbol)
+	print('Last price: {}'.format(ticker['last']))
 
-lista.append(s)
-print(lista)
+	return ticker['last']
 
-lista = []
-print(lista)
+last_price('BTC/USD')
