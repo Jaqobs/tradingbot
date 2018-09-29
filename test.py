@@ -1,20 +1,16 @@
 import configparser
 import ccxt
 import time
+import indicators
+from exchange import ExchData
+import ordermanager as bitmex
 
-cp = configparser.RawConfigParser()  
-cp.read('config.txt')
-apilimit = 5
-apisleep = 5
-bitmex = ccxt.bitmex({
-					'apiKey': cp.get('bitmex', 'APIKEY'),
-					'secret': cp.get('bitmex', 'SECRET'),
-					})
-			
-def last_price(symbol):
-	ticker = bitmex.fetch_ticker(symbol)
-	print('Last price: {}'.format(ticker['last']))
-
-	return ticker['last']
-
-last_price('BTC/USD')
+print(bitmex.get_all_open_positions())
+print('---')
+print(bitmex.get_open_position('BTC/USD'))
+print('---')
+print(bitmex.get_open_position('XBTUSD'))
+print('---')
+print(bitmex.get_open_position('ETHUSD'))
+print('---')
+bitmex.close_position('BTC/USD')

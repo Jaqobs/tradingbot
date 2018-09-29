@@ -2,12 +2,12 @@ from exchange import ExchData
 import tradelogic
 import indicators
 import time
-import mexorders as bitmex
+import ordermanager as bitmex
 
 
 def main():
 
-	bfx = ExchData('bfx', 'BTC/USDT')
+	bfx = ExchData('BTC/USDT')
 	sleep_timer = 60 #3600sec = 1h
 
 	while True:
@@ -28,13 +28,13 @@ def main():
 			bitmex.create_order('BTC/USD', 'market', 'buy', 1)
 
 		if (tradelogic.long_close(candle_open, candle_close)) and (bitmex.has_position() == True):
-			bitmex.create_order('BTC/USD', 'market', 'sell', 1)
+			bitmex.close_position('BTC/USD')
 
 		if (tradelogic.short_open(candle_open, candle_close)) and (bitmex.has_position() == False):
 			bitmex.create_order('BTC/USD', 'market', 'sell', 1)
 
 		if (tradelogic.short_close(candle_open, candle_close)) and (bitmex.has_position() == True):
-			bitmex.create_order('BTC/USD', 'market', 'buy', 1)
+			bitmex.close_position('BTC/USD')
 
 		lastPrice = bitmex.get_last_price('BTC/USD')
 		print('Waiting for next cycle...\n-------------\n')
