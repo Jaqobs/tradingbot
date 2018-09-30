@@ -5,23 +5,21 @@ import time
 from dateutil import tz
 
 class ExchData():
-	cp = configparser.RawConfigParser()  
-	cp.read('config.txt')
 
-	def __init__(self, exchange, symbol, ):
-		if exchange == 'bfx':
-			self.exchange = ccxt.bitfinex2({
-				'rateLimit': 10000,
-			'enableRateLimit': True
-		})
-		else:
-			exchange == ccxt.bitfinex2()
+	def __init__(self, symbol):
+		
+		self.exchange = ccxt.bitfinex2({
+								'rateLimit': 10000,
+								'enableRateLimit': True
+								})
 		print('{0} instantialized...'.format(self.exchange.describe()['name']))
 
 		self.symbol = symbol
 		print('Symbol: {}'.format(self.symbol))
 		
 		self.candles = []
+		self.apilimit = 10
+		self.sleeptimer = 10
 			
 
 	def get_books(self, symbol, ):
@@ -33,6 +31,7 @@ class ExchData():
 		print('Candles cleared...')
 			
 	def fetch_candles(self, timeframe=None, start=None, limit=None):
+		apitry = 0
 		print('Attempting to fetch candles...')
 		if timeframe == None:
 			timeframe = '1h'
@@ -47,8 +46,15 @@ class ExchData():
 		if limit == None:
 			limit = 100
 		print('Limit: {}'.format(limit))
-
-		results = self.exchange.fetch_ohlcv(self.symbol, timeframe=timeframe, since=start, limit=limit)
+		condition = True
+		while (apitry < self.apilimit) and (condition):
+			try:
+				results = self.exchange.fetch_ohlcv(self.symbol, timeframe=timeframe, since=start, limit=limit)
+				condition = False
+			except:
+				print('Could not fetch candles. Trying again...')
+				apitry += 1
+				time.sleep(self.sleeptimer)
 
 		for element in results:
 			candle = {
@@ -63,6 +69,8 @@ class ExchData():
 
 
 	def fetch_candles_long(self, timeframe, start, limit):
+		results = []
+		results2 = []
 		print('Attempting to fetch candles...')
 		print('Timeframe: {}'.format(timeframe))
 
@@ -73,7 +81,31 @@ class ExchData():
 			limit = 1000
 		print('Limit: {}'.format(limit))
 
-		results = self.exchange.fetch_ohlcv(self.symbol, timeframe=timeframe, since=since, limit=limit)
+		condition = True
+		apitry = 0
+		while (apitry < self.apilimit) and (condition):
+			try:
+				results = self.exchange.fetch_ohlcv(self.symbol, timeframe=timeframe, since=since, limit=limit)
+				condition = False
+			except:
+				print('Could not fetch candles. Trying again...')
+				apitry += 1
+				time.sleep(self.sleeptimer)
+
+		print('Fetching second part of candles...')
+		since = int(self.exchange.milliseconds()) - 86400000 * int(start // 2)
+		print('Start date: {}'.format(self.exchange.iso8601(since)))
+		
+		condition = True
+		apitry = 0
+		while (apitry < self.apilimit) and (condition):
+			try:
+				results2 = results = self.exchange.fetch_ohlcv(self.symbol, timeframe=timeframe, since=since, limit=limit)
+				condition = False
+			except:
+				print('Could not fetch candles. Trying again...')
+				apitry += 1
+				time.sleep(self.sleeptimer)
 
 		for element in results:
 			candle = {
@@ -85,12 +117,6 @@ class ExchData():
 				'volume':element[5]}
 
 			self.candles.insert(0, candle)
-
-		print('Fetching second part of candles...')
-		since = int(self.exchange.milliseconds()) - 86400000 * int(start // 2)
-		print('Start date: {}'.format(self.exchange.iso8601(since)))
-		results2 = results = self.exchange.fetch_ohlcv(self.symbol, timeframe=timeframe, since=since, limit=limit)
-
 		for element in results2:
 			candle = {
 				'timestamp':element[0],
@@ -121,7 +147,7 @@ class ExchData():
 		#remove open candles
 		print('Original length: {}'.format(len(candle_data)))		#debugging
 		while (condition): 		
-			if ( int(self.get_hour(candle_data[0]['timestamp'])) % 4 == 3 ):
+			if ( int(self.get_hour(candle_data[0]['timestamp'])) % timeframe == timeframe-1 ):
 				condition = False
 			else:
 				del candle_data[0]
