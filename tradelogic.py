@@ -2,6 +2,7 @@
 #4h strategy
 
 import indicators as ind
+import logging
 
 def long_open(data_open, data_close):
 	current_price = 0.0
@@ -10,10 +11,13 @@ def long_open(data_open, data_close):
 	ema_open = ind.ema(data_open, 9) * 0.995
 	boolean = False
 
+	logging.info('9Ema Close: {} - 9Ema Open: {} - 300Alma: {}'.format(ema_close, ema_open, alma_close))
+
 	if (ema_close > alma_close) and (ema_open < alma_close):
-		boolean = True
-	print('9Ema Close: {}\n9Ema Open: {}\n300Alma: {}'.format(ema_close, ema_open, alma_close))
-	print('Long open: {}'. format(boolean))
+		boolean = True	
+	
+	logging.info('Long open: {}'. format(boolean))
+
 	return boolean
 
 
@@ -24,11 +28,13 @@ def long_close(data_open, data_close):
 	ema_open = ind.ema(data_open, 9) * 1.005
 	boolean = False
 
+	logging.info('9Ema: {} - 30Ema: {}'.format(ema_close, ema_thirty_close))
+
 	if (ema_close < ema_thirty_close) and (ema_open > ema_thirty_close):
 		boolean = True
-		print('9Ema: {}\n30Ema: {}'.format(ema_close, ema_thirty_close))
 
-	print('Long close: {}'. format(boolean))
+	logging.info('Long close: {}'. format(boolean))
+
 	return boolean
 
 
@@ -39,11 +45,13 @@ def short_open(data_open, data_close):
 	ema_open = ind.ema(data_open, 9)  * 1.005
 	boolean = False
 
+	logging.info('9Ema Close: {} - 9Ema Open: {} - 300Alma: {}'.format(ema_close, ema_open, alma_close))
+
 	if (ema_close < alma_close) and (ema_open > alma_close):
 		boolean = True
-
-	print('9Ema Close: {}\n9Ema Open: {}\n300Alma: {}'.format(ema_close, ema_open, alma_close))
-	print('Short open: {}'. format(boolean))
+	
+	logging.info('Short open: {}'. format(boolean))
+	
 	return boolean
 
 
@@ -54,9 +62,11 @@ def short_close(data_open, data_close):
 	ema_open = ind.ema(data_open, 9) * 0.995
 	boolean = False
 
+	logging.info('9Ema: {} - 30Ema: {}'.format(ema_close, ema_thirty_close))
+
 	if (ema_close > ema_thirty_close) and (ema_open < ema_thirty_close):
 		boolean = True
-		print('9Ema: {}\n30Ema: {}'.format(ema_close, ema_thirty_close))
-
-	print('Short close: {}'. format(boolean))
+		
+	logging.info('Short close: {}'. format(boolean))
+	
 	return boolean
