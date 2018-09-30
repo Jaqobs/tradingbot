@@ -31,7 +31,17 @@ def create_order(symbol, ordertype, side, amount, price=None):
 
 
 def get_last_price(symbol):
-	ticker = bitmex.fetch_ticker(symbol)
+	apitry = 0
+	condition = True
+	while (condition) and (apitry < apilimit):
+		try:
+			ticker = bitmex.fetch_ticker(symbol)
+			condition = False
+		except:
+			print('Timeout. Trying again...')
+			apitry += 1
+			time.sleep(apisleep)
+			
 	print('Last price: {}'.format(ticker['last']))
 
 	return ticker['last']

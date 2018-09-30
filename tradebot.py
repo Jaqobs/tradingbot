@@ -2,6 +2,7 @@ from exchange import ExchData
 import tradelogic
 import indicators
 import time
+from datetime import datetime
 import ordermanager as bitmex
 
 
@@ -11,6 +12,7 @@ def main():
 	sleep_timer = 60 #3600sec = 1h
 
 	while True:
+		print(datetime.now())
 		bfx.clear_candles()
 		bfx.fetch_candles_long(timeframe='1h', start=52, limit=624)
 		candles = bfx.get_candles()
