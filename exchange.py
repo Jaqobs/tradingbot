@@ -2,6 +2,7 @@ import configparser
 import ccxt
 import datetime
 import time
+import logging
 from dateutil import tz
 
 class ExchData():
@@ -12,10 +13,10 @@ class ExchData():
 								'rateLimit': 10000,
 								'enableRateLimit': True
 								})
-		print('{0} instantialized...'.format(self.exchange.describe()['name']))
+		logging.info('{0} instantialized...'.format(self.exchange.describe()['name']))
 
 		self.symbol = symbol
-		print('Symbol: {}'.format(self.symbol))
+		logging.debug('Symbol: {}'.format(self.symbol))
 		
 		self.candles = []
 		self.apilimit = 10
@@ -28,31 +29,31 @@ class ExchData():
 
 	def clear_candles(self):
 		self.candles = []
-		print('Candles cleared...')
+		logging.info('Candles cleared...')
 			
 	def fetch_candles(self, timeframe=None, start=None, limit=None):
 		apitry = 0
-		print('Attempting to fetch candles...')
+		logging.info('Attempting to fetch candles...')
 		if timeframe == None:
 			timeframe = '1h'
-		print('Timeframe: {}'.format(timeframe))
+		logging.info('Timeframe: {}'.format(timeframe))
 
 		if start == None:
 			start = int(self.exchange.milliseconds()) - 86400000 * 1 #last 1 * 24hours
 		else:
 			start = int(self.exchange.milliseconds()) - 86400000 * start
-		print('Start date: {}'.format(self.exchange.iso8601(start)))
+		logging.info('Start date: {}'.format(self.exchange.iso8601(start)))
 
 		if limit == None:
 			limit = 100
-		print('Limit: {}'.format(limit))
+		logging.info('Limit: {}'.format(limit))
 		condition = True
 		while (apitry < self.apilimit) and (condition):
 			try:
 				results = self.exchange.fetch_ohlcv(self.symbol, timeframe=timeframe, since=start, limit=limit)
 				condition = False
 			except:
-				print('Could not fetch candles. Trying again...')
+				logging.error('Could not fetch candles. Trying again...')
 				apitry += 1
 				time.sleep(self.sleeptimer)
 
@@ -71,15 +72,15 @@ class ExchData():
 	def fetch_candles_long(self, timeframe, start, limit):
 		results = []
 		results2 = []
-		print('Attempting to fetch candles...')
-		print('Timeframe: {}'.format(timeframe))
+		logging.info('Attempting to fetch candles...')
+		logging.info('Timeframe: {}'.format(timeframe))
 
 		since = int(self.exchange.milliseconds()) - 86400000 * start
-		print('Start date: {}'.format(self.exchange.iso8601(since)))
+		logging.info('Start date: {}'.format(self.exchange.iso8601(since)))
 
 		if limit == None:
 			limit = 1000
-		print('Limit: {}'.format(limit))
+		logging.info('Limit: {}'.format(limit))
 
 		condition = True
 		apitry = 0
@@ -88,13 +89,13 @@ class ExchData():
 				results = self.exchange.fetch_ohlcv(self.symbol, timeframe=timeframe, since=since, limit=limit)
 				condition = False
 			except:
-				print('Could not fetch candles. Trying again...')
+				logging.error('Could not fetch candles. Trying again...')
 				apitry += 1
 				time.sleep(self.sleeptimer)
 
-		print('Fetching second part of candles...')
+		logging.info('Fetching second part of candles...')
 		since = int(self.exchange.milliseconds()) - 86400000 * int(start // 2)
-		print('Start date: {}'.format(self.exchange.iso8601(since)))
+		logging.info('Start date: {}'.format(self.exchange.iso8601(since)))
 		
 		condition = True
 		apitry = 0
@@ -103,7 +104,7 @@ class ExchData():
 				results2 = results = self.exchange.fetch_ohlcv(self.symbol, timeframe=timeframe, since=since, limit=limit)
 				condition = False
 			except:
-				print('Could not fetch candles. Trying again...')
+				logging.error('Could not fetch candles. Trying again...')
 				apitry += 1
 				time.sleep(self.sleeptimer)
 
@@ -143,15 +144,15 @@ class ExchData():
 	def convert_candles(self, candle_data, timeframe):
 		new_candles = []
 		condition = True
-		print('Converting candles to {}h candles...'.format(timeframe))
+		logging.info('Converting candles to {}h candles...'.format(timeframe))
 		#remove open candles
-		print('Original length: {}'.format(len(candle_data)))		#debugging
+		logging.info('Original length: {}'.format(len(candle_data)))		#debugging
 		while (condition): 		
 			if ( int(self.get_hour(candle_data[0]['timestamp'])) % timeframe == timeframe-1 ):
 				condition = False
 			else:
 				del candle_data[0]
-		print('New length: {}'.format(len(candle_data)))		#debugging
+		logging.info('New length: {}'.format(len(candle_data)))		#debugging
 		
 		#create custom candles
 		i = 0

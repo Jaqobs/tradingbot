@@ -1,6 +1,7 @@
 import configparser
 import ccxt
 import time
+import logging
 
 cp = configparser.RawConfigParser()  
 cp.read('config.txt')
@@ -21,11 +22,11 @@ def create_order(symbol, ordertype, side, amount, price=None):
 	while (apitry < apilimit) and (condition):
 		try:
 			order = bitmex.create_order(symbol=symbol, type=ordertype, side=side, amount=amount, price=price)
-			print('Order successfully created!')
-			print(order)
+			logging.info('Order successfully created!')
+			logging.info(order)
 			condition = False
 		except(ccxt.ExchangeError):
-			print('Error. Could not create order. Trying again...')
+			logging.error('Could not create order. Trying again...')
 			apitry += 1
 			time.sleep(apisleep)
 
@@ -38,11 +39,11 @@ def get_last_price(symbol):
 			ticker = bitmex.fetch_ticker(symbol)
 			condition = False
 		except:
-			print('Timeout. Trying again...')
+			logging.error('Timeout. Trying again...')
 			apitry += 1
 			time.sleep(apisleep)
 			
-	print('Last price: {}'.format(ticker['last']))
+	logging.info('Last price: {}'.format(ticker['last']))
 
 	return ticker['last']
 
@@ -56,7 +57,7 @@ def get_all_positions():
 			positions = bitmex.private_get_position()
 			condition = False
 		except(ccxt.ExchangeError):
-			print('Error. Could not fetch positions. Trying again...')
+			logging.error('Could not fetch positions. Trying again...')
 			apitry += 1
 			time.sleep(apisleep)
 	
@@ -90,19 +91,26 @@ def get_all_open_positions():
 def has_position():
 	positions = get_all_open_positions()
 	if (positions):
-		print('Is currently in position.')
+		logging.info('Is currently in position.')
 		return True
 	else:
-		print('Is currently NOT in position...')
+		logging.info('Is currently NOT in position...')
 		return False
 
 
 def get_open_orders():
+	apitry: 0
+	condition = True
 	orders = []
-	try:
-		orders = bitmex.fetch_open_orders()
-	except(ccxt.ExchangeError):
-		print('Error. Could not fetch orders.')
+
+	while (condition) and (apitry < apilimit):
+		try:
+			orders = bitmex.fetch_open_orders()
+			condition = False
+		except(ccxt.ExchangeError):
+			logging.error('Could not fetch orders.')
+			apitry += 1
+			time.sleep(apisleep)
 
 	return orders
 
@@ -110,20 +118,23 @@ def get_open_orders():
 def has_orders():
 	orders = get_open_orders()
 	if (orders):
+		logging.info('Has orders.')
 		return True
 	else:
+		logging.info('Has NO orders.')
 		return False
 
 
 def cancel_order(orderid):
 	apitry = 0
 	condition = True
+
 	while (apitry < apilimit) and condition: 
 		try:
 			bitmex.cancel_order(orderid)
 			condition = False
 		except:
-			print('Could not cancel order. Trying again')
+			logging.error('Could not cancel order. Trying again...')
 			apitry += 1
 			time.sleep(apisleep)
 
@@ -134,9 +145,9 @@ def cancel_all_orders():
 		for order in orders:
 			cancel_order (order['id'])
 
-		print('All orders canceled.')
+		logging.info('All orders canceled.')
 	else:
-		print('No open orders.')
+		logging.warning('No open orders.')
 
 
 def close_position(symbol):
@@ -151,12 +162,12 @@ def close_position(symbol):
 			symbol = 'BTC/USD'
 		
 
-		print('Attempting to close position: {}'.format(position[0]['symbol']))
-		print('Side: {} -- Quantity: {} -- Symbol: {}'.format(side, amount, symbol))
+		logging.info('Attempting to close position: {}'.format(position[0]['symbol']))
+		logging.info('Side: {} -- Quantity: {} -- Symbol: {}'.format(side, amount, symbol))
 		create_order(symbol,'market', side, amount)
-		print('Position {} closed.'.format(symbol)) 
+		logging.info('Position {} closed.'.format(symbol)) 
 	else:
-		print('No position with instrument {} open'.format(symbol))
+		logging.warning('No position with instrument {} open'.format(symbol))
 
 
 def close_all_positions():
@@ -165,8 +176,8 @@ def close_all_positions():
 		for position in positions:
 			close_position(position[0]['symbol'])
 
-		print('All open positions closed.')
+		logging.info('All open positions closed.')
 	else:
-		print('No open positions')
+		logging.warning('No open positions')
 
 
