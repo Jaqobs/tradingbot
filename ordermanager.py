@@ -98,6 +98,26 @@ def has_position():
 		return False
 
 
+def has_long_position(symbol):
+	position = get_open_position(symbol)
+	if (int(position[0]['currentQty']) > 0):
+		logging.info('Is currently in long position.')
+		return True
+	else:
+		logging.info('Is currently NOT in position...')
+		return False
+
+
+def has_short_position(symbol):
+	position = get_open_position(symbol)
+	if (int(position[0]['currentQty']) < 0):
+		logging.info('Is currently in short position.')
+		return True
+	else:
+		logging.info('Is currently NOT in position...')
+		return False
+
+
 def get_open_orders():
 	apitry: 0
 	condition = True

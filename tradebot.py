@@ -13,7 +13,7 @@ def main():
 		level = logging.INFO,
 		format = '%(asctime)s  %(levelname)-10s %(processName)s  %(name)s %(message)s',
 		handlers=[
-			logging.FileHandler("{0}/{1}.log".format(sys.path[0], time.strftime("tradebot-%Y-%m-%d"))),
+			logging.FileHandler('{1}.log'.format(sys.path[0], time.strftime("tradebot-%Y-%m-%d"))),
 			logging.StreamHandler()
 			]
 		)
@@ -39,13 +39,13 @@ def main():
 		if (tradelogic.long_open(candle_open, candle_close)) and (bitmex.has_position() == False):
 			bitmex.create_order('BTC/USD', 'market', 'buy', 1)
 
-		if (tradelogic.long_close(candle_open, candle_close)) and (bitmex.has_position() == True):
+		if (tradelogic.long_close(candle_open, candle_close)) and (bitmex.has_long_position('BTC/USD') == True):
 			bitmex.close_position('BTC/USD')
 
 		if (tradelogic.short_open(candle_open, candle_close)) and (bitmex.has_position() == False):
 			bitmex.create_order('BTC/USD', 'market', 'sell', 1)
 
-		if (tradelogic.short_close(candle_open, candle_close)) and (bitmex.has_position() == True):
+		if (tradelogic.short_close(candle_open, candle_close)) and (bitmex.has_short_position('BTC/USD') == True):
 			bitmex.close_position('BTC/USD')
 
 		lastPrice = bitmex.get_last_price('BTC/USD')
