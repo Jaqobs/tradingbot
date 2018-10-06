@@ -100,21 +100,23 @@ def has_position():
 
 def has_long_position(symbol):
 	position = get_open_position(symbol)
-	if (int(position[0]['currentQty']) > 0):
-		logging.info('Is currently in long position.')
-		return True
+	if (position):
+		if (int(position[0]['currentQty']) > 0):
+			logging.info('Is currently in LONG position.')
+			return True
 	else:
-		logging.info('Is currently NOT in position...')
+		logging.info('Is currently NOT in LONG position...')
 		return False
 
 
 def has_short_position(symbol):
 	position = get_open_position(symbol)
-	if (int(position[0]['currentQty']) < 0):
-		logging.info('Is currently in short position.')
-		return True
+	if (position):
+		if (int(position[0]['currentQty']) < 0):
+			logging.info('Is currently in SHORT position.')
+			return True
 	else:
-		logging.info('Is currently NOT in position...')
+		logging.info('Is currently NOT in SHORT position...')
 		return False
 
 
