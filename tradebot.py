@@ -4,6 +4,7 @@ import indicators
 import time
 import logging
 import sys
+import os
 from datetime import datetime
 import ordermanager as bitmex
 
@@ -18,6 +19,7 @@ def main():
 			]
 		)
 	logging.info('Tradebot started.')
+	logging.info('Current path: {}'.format(os.getcwd()))
 
 	bfx = ExchData('BTC/USDT')
 	sleep_timer = 60 #3600sec = 1h
@@ -36,13 +38,13 @@ def main():
 			candle_close.append(candle['close'])
 			volume.append(candle['volume'])
 		
-		if (tradelogic.long_open(candle_open, candle_close)) and (bitmex.has_long_position() == False):
+		if (tradelogic.long_open(candle_open, candle_close)) and (bitmex.has_long_position('BTC/USD') == False):
 			bitmex.create_order('BTC/USD', 'market', 'buy', 1)
 
 		if (tradelogic.long_close(candle_open, candle_close)) and (bitmex.has_long_position('BTC/USD') == True):
 			bitmex.close_position('BTC/USD')
 
-		if (tradelogic.short_open(candle_open, candle_close)) and (bitmex.has_short_position() == False):
+		if (tradelogic.short_open(candle_open, candle_close)) and (bitmex.has_short_position('BTC/USD') == False):
 			bitmex.create_order('BTC/USD', 'market', 'sell', 1)
 
 		if (tradelogic.short_close(candle_open, candle_close)) and (bitmex.has_short_position('BTC/USD') == True):
