@@ -4,16 +4,13 @@
 import indicators as ind
 import logging
 
-def long_open(data_open, data_close):
-	current_price = 0.0
-	alma_close = ind.alma(data_close, 300)
-	ema_close = ind.ema(data_close, 9)
-	ema_open = ind.ema(data_open, 9)
+def long_open(candle_low, candle_close, volume):
 	boolean = False
+	bottom_band = ind.vwma(candle_close, volume, 200) * 0.966235
 
-	logging.info('9Ema Close: {} - 9Ema Open: {} - 300Alma: {}'.format(ema_close, ema_open, alma_close))
+	logging.info('Current low: {0} - Long Entry: {1:.2f}'.format(candle_low[0], bottom_band))
 
-	if (ema_close > alma_close) and (ema_open < alma_close):
+	if (candle_low[0] < bottom_band):
 		boolean = True	
 	
 	logging.info('Long open: {}'. format(boolean))
@@ -21,16 +18,13 @@ def long_open(data_open, data_close):
 	return boolean
 
 
-def long_close(data_open, data_close):
-	current_price = 0.0
-	ema_thirty_close = ind.ema(data_close, 30)
-	ema_close = ind.ema(data_close, 9)
-	ema_open = ind.ema(data_open, 9)
+def long_close(candle_high, candle_close, volume):
 	boolean = False
+	close = ind.vwma(candle_close, volume, 200) * 1.004882
 
-	logging.info('9Ema: {} - 30Ema: {}'.format(ema_close, ema_thirty_close))
+	logging.info('Long close at {0:.2f}'.format(close))
 
-	if (ema_close < ema_thirty_close) and (ema_open > ema_thirty_close):
+	if (candle_high[0] > close):
 		boolean = True
 
 	logging.info('Long close: {}'. format(boolean))
@@ -38,35 +32,29 @@ def long_close(data_open, data_close):
 	return boolean
 
 
-def short_open(data_open, data_close):
-	current_price = 0.0
-	alma_close = ind.alma(data_close, 300)
-	ema_close = ind.ema(data_close, 9)
-	ema_open = ind.ema(data_open, 9)
+def short_open(candle_high, candle_close, volume):
 	boolean = False
+	top_band = ind.vwma(candle_close, volume, 200) * 1.036117
+	
+	logging.info('Current high {0} - Short Entry: {1:.2f}'.format(candle_high[0], top_band))
 
-	logging.info('9Ema Close: {} - 9Ema Open: {} - 300Alma: {}'.format(ema_close, ema_open, alma_close))
-
-	if (ema_close < alma_close) and (ema_open > alma_close):
-		boolean = True
+	if (candle_high[0] > top_band):
+		boolean = True	
 	
 	logging.info('Short open: {}'. format(boolean))
-	
+
 	return boolean
 
 
-def short_close(data_open, data_close):
-	current_price = 0.0
-	ema_thirty_close = ind.ema(data_close, 30)
-	ema_close = ind.ema(data_close, 9)
-	ema_open = ind.ema(data_open, 9)
+def short_close(candle_low, candle_close, volume):
 	boolean = False
+	close = ind.vwma(candle_close, volume, 200) * 0.995117
 
-	logging.info('9Ema: {} - 30Ema: {}'.format(ema_close, ema_thirty_close))
+	logging.info('Short close at {0:.2f}'.format(close))
 
-	if (ema_close > ema_thirty_close) and (ema_open < ema_thirty_close):
+	if (candle_low[0] < close):
 		boolean = True
-		
+
 	logging.info('Short close: {}'. format(boolean))
-	
+
 	return boolean
