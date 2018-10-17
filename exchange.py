@@ -8,15 +8,21 @@ from dateutil import tz
 class ExchData():
 
 	def __init__(self, symbol):
-		
-		self.exchange = ccxt.bitfinex2({
-								'rateLimit': 10000,
-								'enableRateLimit': True
-								})
-		logging.info('{0} instantialized...'.format(self.exchange.describe()['name']))
-
 		self.symbol = symbol
-		logging.debug('Symbol: {}'.format(self.symbol))
+		logging.info('Symbol: {}'.format(self.symbol))
+
+		if (symbol in '.BXBT'):
+			self.exchange = ccxt.bitmex({
+											'rateLimit': 10000,
+											'enableRateLimit': True
+											})
+		else:
+			self.exchange = ccxt.bitfinex2({
+											'rateLimit': 10000,
+											'enableRateLimit': True
+											})
+		
+		logging.info('{0} instantialized...'.format(self.exchange.describe()['name']))
 		
 		self.candles = []
 		self.apilimit = 10
