@@ -17,7 +17,7 @@ class ExchData():
 											'enableRateLimit': True
 											})
 		else:
-			self.exchange = ccxt.bitfinex2({
+			self.exchange = ccxt.bitmex({
 											'rateLimit': 10000,
 											'enableRateLimit': True
 											})

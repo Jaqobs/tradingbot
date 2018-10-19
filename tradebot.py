@@ -21,14 +21,16 @@ def main():
 	logging.info('Tradebot started.')
 	logging.info('Current path: {}'.format(os.getcwd()))
 
-	bfx = ExchData('BTC/USDT')
+	#bfx = ExchData('BTC/USDT')
+	bmex = ExchData('BTC/USD')
+	exch = bmex
 	sleep_timer = 60 #3600sec = 1h
 
 	while True:
-		bfx.clear_candles()
-		bfx.fetch_candles_long(timeframe='1h', start=52, limit=624)
-		candles = bfx.get_candles()
-		converted_candles = bfx.convert_candles(candles, 4)
+		exch.clear_candles()
+		exch.fetch_candles_long(timeframe='1h', start=52, limit=624)
+		candles = exch.get_candles()
+		converted_candles = exch.convert_candles(candles, 4)
 
 		candle_open = []
 		candle_close = []
