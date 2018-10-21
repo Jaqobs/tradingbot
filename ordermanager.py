@@ -121,7 +121,7 @@ def has_short_position(symbol):
 
 
 def get_open_orders():
-	apitry: 0
+	apitry = 0
 	condition = True
 	orders = []
 
