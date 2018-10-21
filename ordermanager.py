@@ -167,7 +167,7 @@ def cancel_all_orders():
 		for order in orders:
 			cancel_order (order['id'])
 
-		logging.notice('All orders canceled.')
+		logging.warning('All orders canceled.')
 	else:
 		logging.warning('No open orders.')
 
@@ -184,10 +184,10 @@ def close_position(symbol):
 			symbol = 'BTC/USD'
 		
 
-		logging.notice('Attempting to close position: {}'.format(position[0]['symbol']))
-		logging.notice('Side: {} -- Quantity: {} -- Symbol: {}'.format(side, amount, symbol))
+		logging.warning('Attempting to close position: {}'.format(position[0]['symbol']))
+		logging.warning('Side: {} -- Quantity: {} -- Symbol: {}'.format(side, amount, symbol))
 		create_order(symbol,'market', side, amount)
-		logging.notice('Position {} closed.'.format(symbol)) 
+		logging.warning('Position {} closed.'.format(symbol)) 
 	else:
 		logging.warning('No position with instrument {} open'.format(symbol))
 
@@ -198,7 +198,7 @@ def close_all_positions():
 		for position in positions:
 			close_position(position[0]['symbol'])
 
-		logging.notice('All open positions closed.')
+		logging.warning('All open positions closed.')
 	else:
 		logging.warning('No open positions')
 
