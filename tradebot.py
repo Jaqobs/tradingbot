@@ -11,13 +11,14 @@ import ordermanager as bitmex
 
 def main():
     abspath = os.path.abspath(__file__)
-    dname = os.paath.dirname(abspath)
+    dname = os.path.dirname(abspath)
     os.chdir(dname)
     logging.basicConfig( 
         level = logging.INFO,
         format = '%(asctime)s  %(levelname)-10s %(processName)s  %(name)s %(message)s',
         handlers=[
-            logging.FileHandler('{1}.log'.format(sys.path[0], time.strftime("tradebot-%Y-%m-%d"))),
+            logging.FileHandler('{1}.log'.format(sys.path[0], 
+                                time.strftime("tradebot-%Y-%m-%d"))),
             logging.StreamHandler()
             ]
         )
@@ -43,16 +44,20 @@ def main():
             candle_close.append(candle['close'])
             volume.append(candle['volume'])
         
-        if (tradelogic.long_open(candle_open, candle_close)) and (bitmex.has_long_position('BTC/USD') == False):
+        if (tradelogic.long_open(candle_open, candle_close) and 
+            bitmex.has_long_position('BTC/USD') == False):
             bitmex.create_order('BTC/USD', 'market', 'buy', 1)
 
-        if (tradelogic.long_close(candle_open, candle_close)) and (bitmex.has_long_position('BTC/USD') == True):
+        if (tradelogic.long_close(candle_open, candle_close) and 
+            bitmex.has_long_position('BTC/USD') == True):
             bitmex.close_position('BTC/USD')
 
-        if (tradelogic.short_open(candle_open, candle_close)) and (bitmex.has_short_position('BTC/USD') == False):
+        if (tradelogic.short_open(candle_open, candle_close) and 
+            bitmex.has_short_position('BTC/USD') == False):
             bitmex.create_order('BTC/USD', 'market', 'sell', 1)
 
-        if (tradelogic.short_close(candle_open, candle_close)) and (bitmex.has_short_position('BTC/USD') == True):
+        if (tradelogic.short_close(candle_open, candle_close) and 
+            bitmex.has_short_position('BTC/USD') == True):
             bitmex.close_position('BTC/USD')
 
         lastPrice = bitmex.get_last_price('BTC/USD')
