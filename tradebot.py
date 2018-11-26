@@ -1,12 +1,16 @@
-from exchange import ExchData
-import tradelogic
-import indicators
+#tradebot framework
+#@author: Jaqobs
+#@email: jaqobs@jaqobstran.com
+
 import time
 import logging
 import sys
 import os
 from datetime import datetime
-import ordermanager as bitmex
+
+from exchange import ExchData
+import tradelogic
+
 
 
 def main():
@@ -35,33 +39,12 @@ def main():
         exch.fetch_candles_long(timeframe='1h', start=52, limit=624)
         candles = exch.get_candles()
         converted_candles = exch.convert_candles(candles, 4)
-
-        candle_open = []
-        candle_close = []
-        volume = []
-        for candle in converted_candles:
-            candle_open.append(candle['open'])
-            candle_close.append(candle['close'])
-            volume.append(candle['volume'])
         
-        if (tradelogic.long_open(candle_open, candle_close) and 
-            bitmex.has_long_position('BTC/USD') == False):
-            bitmex.create_order('BTC/USD', 'market', 'buy', 1)
-
-        if (tradelogic.long_close(candle_open, candle_close) and 
-            bitmex.has_long_position('BTC/USD') == True):
-            bitmex.close_position('BTC/USD')
-
-        if (tradelogic.short_open(candle_open, candle_close) and 
-            bitmex.has_short_position('BTC/USD') == False):
-            bitmex.create_order('BTC/USD', 'market', 'sell', 1)
-
-        if (tradelogic.short_close(candle_open, candle_close) and 
-            bitmex.has_short_position('BTC/USD') == True):
-            bitmex.close_position('BTC/USD')
+        #parse candles to the tradelogic
+        tradelogic.tradelogic(converted_candles)
 
         lastPrice = bitmex.get_last_price('BTC/USD')
-        logging.info('Waiting for next cycle...')
+        logging.info('Waiting for the next cycle...')
         logging.info('-------------')
         time.sleep(sleep_timer * 5)
     

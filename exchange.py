@@ -1,9 +1,11 @@
 import configparser
-import ccxt
 import datetime
 import time
 import logging
 from dateutil import tz
+
+import ccxt
+
 
 class ExchData():
 

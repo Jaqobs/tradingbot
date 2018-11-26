@@ -1,8 +1,39 @@
 #tradelogic by Jaqobs
 #4h strategy
 
-import indicators as ind
 import logging
+
+import indicators as ind
+import ordermanager as bitmex
+
+
+def tradelogic(candles):
+    candle_open = []
+    candle_high = []
+    candle_low = []
+    candle_close = []
+    volume = []
+    for candle in candles:
+        candle_open.append(candle['open'])
+        candle_close.append(candle['close'])
+        volume.append(candle['volume'])
+
+    if (long_open(candle_open, candle_close) and 
+            bitmex.has_long_position('BTC/USD') == False):
+        bitmex.create_order('BTC/USD', 'market', 'buy', 1)
+
+    if (long_close(candle_open, candle_close) and 
+            bitmex.has_long_position('BTC/USD') == True):
+        bitmex.close_position('BTC/USD')
+
+    if (short_open(candle_open, candle_close) and 
+            bitmex.has_short_position('BTC/USD') == False):
+        bitmex.create_order('BTC/USD', 'market', 'sell', 1)
+
+    if (short_close(candle_open, candle_close) and 
+            bitmex.has_short_position('BTC/USD') == True):
+        bitmex.close_position('BTC/USD')
+
 
 def long_open(data_open, data_close):
     current_price = 0.0
