@@ -3,20 +3,30 @@
 
 import logging
 
+from exchange import ExchData
 import indicators as ind
 import ordermanager as bitmex
 
 
-def tradelogic(candles):
+
+def tradelogic(exchange):
+
+    exchange.clear_candles()
+    exchange.fetch_candles_long(timeframe='1h', start=52, limit=624)
+    candles = exchange.get_candles()
+    converted_candles = exchange.convert_candles(candles, 4)
+
     candle_open = []
     candle_high = []
     candle_low = []
     candle_close = []
     volume = []
-    for candle in candles:
+
+    for candle in converted_candles:
         candle_open.append(candle['open'])
         candle_close.append(candle['close'])
         volume.append(candle['volume'])
+
 
     if (long_open(candle_open, candle_close) and 
             bitmex.has_long_position('BTC/USD') == False):

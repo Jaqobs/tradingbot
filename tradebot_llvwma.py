@@ -9,7 +9,7 @@ import os
 from datetime import datetime
 
 from exchange import ExchData
-import tradelogic
+import tradelogicllvwma
 import ordermanager as bitmex
 
 
@@ -28,6 +28,7 @@ def main():
             ]
         )
     logging.info('Tradebot started.')
+    logging.info('Strategy: LLVWMA Scalping')
     logging.info('Current path: {}'.format(os.getcwd()))
 
     #bfx = ExchData('BTC/USDT')
@@ -37,7 +38,7 @@ def main():
 
     while True:
         #parse exchange to the tradelogic
-        tradelogic.tradelogic(exch)
+        tradelogicllvwma.tradelogic(exch)
 
         lastPrice = bitmex.get_last_price('BTC/USD')
         logging.info('Waiting for the next cycle...')
