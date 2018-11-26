@@ -52,7 +52,7 @@ def long_open(candle_close, volume):
     current_price = candle_close[0]
     vwma = ind.vwma(candle_close, volume, 200) * 0.913294
 
-    logging.info('Current price: {0:.2f} – Long entry: {1:.2f}'.format(
+    logging.info('Current price: {0:.2f} - Long entry: {1:.2f}'.format(
         current_price, vwma))
 
     if (current_price < vwma):
@@ -66,7 +66,7 @@ def long_close(candle_close, volume):
     current_price = candle_close[0]
     vwma = ind.vwma(candle_close, volume, 200) * 1.015117
 
-    logging.info('Current price: {0:.2f} – Long exit: {1:.2f}'.format(
+    logging.info('Current price: {0:.2f} - Long exit: {1:.2f}'.format(
         current_price, vwma))
 
     if (current_price > vwma):
@@ -80,7 +80,7 @@ def short_open(candle_close, volume):
     current_price = candle_close[0]
     vwma = ind.vwma(candle_close, volume, 200) * 1.036117
 
-    logging.info('Current price: {0:.2f} – Short entry: {1:.2f}'.format(
+    logging.info('Current price: {0:.2f} - Short entry: {1:.2f}'.format(
         current_price, vwma))
 
     if (current_price > vwma):
@@ -94,7 +94,7 @@ def short_close(candle_close, volume):
     current_price = candle_close[0]
     vwma = ind.vwma(candle_close, volume, 200) * 0.985294
 
-    logging.info('Current price: {0:.2f} – Short exit: {1:.2f}'.format(
+    logging.info('Current price: {0:.2f} - Short exit: {1:.2f}'.format(
         current_price, vwma))
 
     if (current_price < vwma):

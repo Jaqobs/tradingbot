@@ -18,6 +18,7 @@ def main():
     abspath = os.path.abspath(__file__)
     dname = os.path.dirname(abspath)
     os.chdir(dname)
+    
     logging.basicConfig( 
         level = logging.INFO,
         format = '%(asctime)s  %(levelname)-10s %(processName)s  %(name)s %(message)s',
@@ -43,7 +44,7 @@ def main():
         lastPrice = bitmex.get_last_price('BTC/USD')
         logging.info('Waiting for the next cycle...')
         logging.info('-------------')
-        time.sleep(sleep_timer * 5)
+        time.sleep(sleep_timer * 1)
     
 if __name__ == '__main__':
     main()
